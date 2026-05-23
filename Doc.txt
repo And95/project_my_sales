@@ -15,3 +15,8 @@ npm install typeorm reflect-metadata pg
 brew services list
 brew services start postgresql@16
 brew services stop postgresql@16
+
+npm i -D cross-env
+
+command: npm run migration:create --name=CreateProducts
+command: npm run migration:run

@@ -7,7 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore-watch node_modules src/shared/http/server.ts",
     "lint": "eslint . --ext .ts",
-    "lint-fix": "eslint . --ext .ts --fix"
+    "lint-fix": "eslint . --ext .ts --fix",
+    "migration:create": "cross-env MIGRATION_NAME=$npm_config_name ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:create src/shared/typeorm/migrations/$npm_config_name",
+    "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/shared/typeorm/data-source.ts"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +22,7 @@
     "@types/node": "^25.9.1",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
+    "cross-env": "^10.1.0",
     "eslint": "^10.4.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
