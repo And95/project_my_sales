@@ -1,0 +1,17 @@
+npm i typescript ts-node-dev @types/node tsconfig-paths ts-node -D
+
+npx tsc --init --rootDir src --outDir build --esModuleInterop --resolveJsonModule --lib es6 --module commonjs --allowJs --noImplicitAny
+
+npm i -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin
+
+npm install -D eslint @eslint/js typescript-eslint
+
+npm i express cors express-async-errors
+
+npm i -D @types/express @types/cors
+
+npm install typeorm reflect-metadata pg
+
+brew services list
+brew services start postgresql@16
+brew services stop postgresql@16

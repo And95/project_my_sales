@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "baseUrl": "./",
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@modules/*": ["src/modules/*"],
+      "@shared/*": ["src/shared/*"]
+    },
+    "outDir": "build",
+    "ignoreDeprecations": "6.0",
+
+    "module": "commonjs",
+    "target": "ES2020",
+
+    "types": ["node"],
+    "lib": ["ES2020"],
+
+    "sourceMap": true,
+
+    "declaration": true,
+    "declarationMap": true,
+
+    "strict": true,
+
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+
+    "skipLibCheck": true,
+
+    "noImplicitAny": true,
+
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": true,
+  },
+
+  "include": ["src"],
+  "exclude": ["node_modules", "build"]
+}
