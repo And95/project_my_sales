@@ -2,7 +2,7 @@ import AppError from "@shared/errors/AppError";
 import { Product } from "../database/entities/Product";
 import { productsRepository } from "../database/repositories/ProductsRepositories";
 
-interface IRequest {
+interface IUpdateProduct {
   id: string;
   name: string;
   price: number;
@@ -15,7 +15,7 @@ export default class UpdateProductService {
     name,
     price,
     quantity,
-  }: IRequest): Promise<Product> {
+  }: IUpdateProduct): Promise<Product> {
     const product = await productsRepository.findById(id);
 
     if (!product) {
