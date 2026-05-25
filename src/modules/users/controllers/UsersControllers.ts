@@ -9,18 +9,18 @@ interface CreateUserBody {
 }
 
 export default class UsersController {
-  async index(request: Request, response: Response): Promise<Response> {
+  index = async (request: Request, response: Response): Promise<Response> => {
     const listUsers = new ListUserService();
 
     const users = await listUsers.execute();
 
     return response.json(users);
-  }
+  };
 
-  async create(
+  create = async (
     request: Request<object, object, CreateUserBody>,
     response: Response,
-  ): Promise<Response> {
+  ): Promise<Response> => {
     const { name, email, password } = request.body;
 
     const createUser = new CreateUserService();
@@ -32,5 +32,5 @@ export default class UsersController {
     });
 
     return response.json(user);
-  }
+  };
 }
