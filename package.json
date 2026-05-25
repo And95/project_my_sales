@@ -32,6 +32,8 @@
     "typescript-eslint": "^8.59.4"
   },
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0",
     "celebrate": "^12.1.2",
     "class-transformer": "^0.5.1",
     "cors": "^2.8.6",
