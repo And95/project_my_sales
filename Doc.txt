@@ -20,3 +20,6 @@ npm i -D cross-env
 
 command: npm run migration:create --name=CreateProducts
 command: npm run migration:run
+
+npm i celebrate
+npm i -D @types/joi
