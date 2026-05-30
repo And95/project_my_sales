@@ -1,6 +1,6 @@
 import { User } from "../database/entities/User";
 import AppError from "@shared/errors/AppError";
-import { sign } from "jsonwebtoken";
+import { Secret, sign } from "jsonwebtoken";
 import { compare } from "bcrypt";
 import "dotenv/config";
 import { UsersRepository } from "../database/repositories/UsersRepositories";
@@ -29,7 +29,11 @@ class CreateSessionsService {
       throw new AppError("Incorrect email/password combination.", 401);
     }
 
-    const token = sign({}, process.env.APP_SECRET as string, {
+    if (!process.env.APP_SECRET) {
+      throw new Error("APP_SECRET not configured");
+    }
+
+    const token = sign({}, process.env.APP_SECRET as Secret, {
       subject: String(user.id),
       expiresIn: "1d",
     });

@@ -36,6 +36,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": true,
+    "typeRoots": ["node_modules/@types", "src/@types"]
   },
 
   "include": ["src"],
