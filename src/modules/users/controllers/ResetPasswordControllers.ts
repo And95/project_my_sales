@@ -7,10 +7,10 @@ interface IResetPasswordBody {
 }
 
 export default class ResetPasswordController {
-  public async create(
+  create = async (
     request: Request<object, object, IResetPasswordBody>,
     response: Response,
-  ): Promise<Response> {
+  ): Promise<Response> => {
     const { password, token } = request.body;
 
     const resetPassword = new ResetPasswordService();
@@ -21,5 +21,5 @@ export default class ResetPasswordController {
     });
 
     return response.status(204).json();
-  }
+  };
 }
