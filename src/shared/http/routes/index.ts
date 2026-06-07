@@ -1,6 +1,7 @@
 import productsRouter from "@modules/products/routes/ProductRoutes";
 import passwordRouter from "@modules/users/routes/PasswordRoutes";
 import sessionsRouter from "@modules/users/routes/SessionRoutes";
+import profileRouter from "@modules/users/routes/ProfileRoutes";
 import avatarRouter from "@modules/users/routes/AvatarRoutes";
 import usersRouter from "@modules/users/routes/UserRoutes";
 import uploadConfig from "@config/uploads";
@@ -17,6 +18,7 @@ routes.use("/users", usersRouter);
 routes.use("/sessions", sessionsRouter);
 routes.use("/avatar", avatarRouter);
 routes.use("/files", express.static(uploadConfig.directory));
-routes.use("/password", passwordRouter);
+routes.use("/passwords", passwordRouter);
+routes.use("/profiles", profileRouter);
 
 export default routes;

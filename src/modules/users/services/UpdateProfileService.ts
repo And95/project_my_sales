@@ -7,8 +7,8 @@ interface IUpdateProfile {
   user_id: number;
   name: string;
   email: string;
-  password?: string;
-  old_password?: string;
+  password?: string | undefined;
+  old_password?: string | undefined;
 }
 
 class UpdateProfileService {
