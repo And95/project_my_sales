@@ -1,3 +1,4 @@
+import customersRouter from "@modules/custumers/routes/CustumersRoutes";
 import productsRouter from "@modules/products/routes/ProductRoutes";
 import passwordRouter from "@modules/users/routes/PasswordRoutes";
 import sessionsRouter from "@modules/users/routes/SessionRoutes";
@@ -20,5 +21,6 @@ routes.use("/avatar", avatarRouter);
 routes.use("/files", express.static(uploadConfig.directory));
 routes.use("/passwords", passwordRouter);
 routes.use("/profiles", profileRouter);
+routes.use("/customers", customersRouter);
 
 export default routes;
