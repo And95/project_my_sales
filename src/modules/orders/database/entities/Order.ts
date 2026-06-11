@@ -13,20 +13,20 @@ import OrdersProducts from "./OrdersProducts";
 @Entity("orders")
 export class Order {
   @PrimaryGeneratedColumn()
-  id?: number;
+  id!: number;
 
   @ManyToOne(() => Customer)
   @JoinColumn({ name: "customer_id" })
-  customer?: Customer;
+  customer!: Customer;
 
   @OneToMany(() => OrdersProducts, (order_products) => order_products.order, {
     cascade: true,
   })
-  order_products?: OrdersProducts[];
+  order_products!: OrdersProducts[];
 
   @CreateDateColumn()
-  created_at?: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at?: Date;
+  updated_at!: Date;
 }

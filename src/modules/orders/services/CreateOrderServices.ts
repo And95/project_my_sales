@@ -20,37 +20,65 @@ export class CreateOrderService {
       throw new AppError("Could not find any customer with the given id.");
     }
 
-    const existsProducts = await productsRepository.findAllByIds(products);
+    if (!products.length) {
+      throw new AppError("You must provide at least one product.", 400);
+    }
+
+    // Valida quantidades inválidas
+    const invalidQuantity = products.find((product) => product.quantity <= 0);
+
+    if (invalidQuantity) {
+      throw new AppError(
+        `Invalid quantity for product ${invalidQuantity.id}.`,
+        400,
+      );
+    }
+
+    // Agrupa produtos repetidos
+    const groupedProducts = products.reduce((acc, product) => {
+      const existing = acc.get(product.id);
+
+      if (existing) {
+        existing.quantity += product.quantity;
+      } else {
+        acc.set(product.id, { ...product });
+      }
+
+      return acc;
+    }, new Map<string, Product>());
+
+    const normalizedProducts = Array.from(groupedProducts.values());
+
+    const existsProducts =
+      await productsRepository.findAllByIds(normalizedProducts);
 
     if (!existsProducts.length) {
       throw new AppError("Could not find any products with the given ids.");
     }
 
-    const existsProductsIds = existsProducts.map((product) => product.id);
-
-    const checkInexistentProducts = products.filter(
-      (product) => !existsProductsIds.includes(product.id),
+    const productsMap = new Map(
+      existsProducts.map((product) => [product.id, product]),
     );
 
-    if (checkInexistentProducts.length) {
+    const inexistentProduct = normalizedProducts.find(
+      (product) => !productsMap.has(product.id),
+    );
+
+    if (inexistentProduct) {
       throw new AppError(
-        `Could not find product ${checkInexistentProducts[0]?.id}.`,
+        `Could not find product ${inexistentProduct.id}.`,
         404,
       );
     }
 
-    const productUnavailable = products.find((product) => {
-      const productExists = existsProducts.find(
-        (item) => item.id === product.id,
-      );
+    const productUnavailable = normalizedProducts.find((product) => {
+      const productExists = productsMap.get(product.id);
 
       return !productExists || product.quantity > productExists.quantity;
     });
 
     if (productUnavailable) {
-      const productExists = existsProducts.find(
-        (item) => item.id === productUnavailable.id,
-      );
+      const productExists = productsMap.get(productUnavailable.id);
 
       throw new AppError(
         `The quantity ${productUnavailable.quantity} is not available for product ${productUnavailable.id}. Available: ${productExists?.quantity ?? 0}.`,
@@ -58,10 +86,10 @@ export class CreateOrderService {
       );
     }
 
-    const serializedProducts = products.map((product) => ({
+    const serializedProducts = normalizedProducts.map((product) => ({
       product_id: product.id,
       quantity: product.quantity,
-      price: existsProducts.find((item) => item.id === product.id)?.price ?? 0,
+      price: productsMap.get(product.id)?.price ?? 0,
     }));
 
     const order = await orderRepositories.createOrder({
@@ -69,14 +97,14 @@ export class CreateOrderService {
       products: serializedProducts,
     });
 
-    const { order_products } = order;
+    const updateProductQuantity = order.order_products.map((product) => {
+      const existingProduct = productsMap.get(product.product_id);
 
-    const updateProductQuantity = order_products!.map((product) => ({
-      id: product.product_id!,
-      quantity:
-        (existsProducts.find((item) => item.id === product.product_id)
-          ?.quantity ?? 0) - (product.quantity ?? 0),
-    }));
+      return {
+        id: product.product_id,
+        quantity: (existingProduct?.quantity ?? 0) - product.quantity,
+      };
+    });
 
     await productsRepository.save(updateProductQuantity);
 

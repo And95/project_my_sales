@@ -14,33 +14,33 @@ import { Order } from "./Order";
 @Entity("orders_products")
 class OrdersProducts {
   @PrimaryGeneratedColumn("uuid")
-  id?: string;
+  id!: string;
 
   @ManyToOne(() => Order, (order) => order.order_products)
   @JoinColumn({ name: "order_id" })
-  order?: Order;
+  order!: Order;
 
   @Column()
-  order_id?: string;
+  order_id!: string;
 
   @ManyToOne(() => Product, (product) => product.order_products)
   @JoinColumn({ name: "product_id" })
-  product?: Product;
+  product!: Product;
 
   @Column()
-  product_id?: string;
+  product_id!: string;
 
   @Column("decimal")
-  price?: number;
+  price!: number;
 
   @Column("int")
-  quantity?: number;
+  quantity!: number;
 
   @CreateDateColumn()
-  created_at?: Date;
+  created_at!: Date;
 
   @UpdateDateColumn()
-  updated_at?: Date;
+  updated_at!: Date;
 }
 
 export default OrdersProducts;
