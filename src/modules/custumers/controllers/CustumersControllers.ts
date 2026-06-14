@@ -17,9 +17,10 @@ interface UpdateCustomerBody {
 
 export default class CustomersController {
   index = async (request: Request, response: Response): Promise<Response> => {
+    const page = parseInt(request.query.page as string) || 1;
+    const limit = parseInt(request.query.limit as string) || 10;
     const listCustomers = new ListCustomerService();
-
-    const customers = await listCustomers.execute();
+    const customers = await listCustomers.execute(page, limit);
 
     return response.json(customers);
   };
