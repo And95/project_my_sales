@@ -29,6 +29,7 @@
     "multer": "^2.1.1",
     "nodemailer": "^8.0.10",
     "pg": "^8.21.0",
+    "rate-limiter-flexible": "^11.2.0",
     "redis": "^5.12.1",
     "reflect-metadata": "^0.2.2",
     "typeorm": "^0.3.27"

@@ -35,7 +35,6 @@ export default class UpdateProductService {
     product.quantity = quantity;
 
     await productsRepository.save(product);
-
     await redisCache.invalidate("api-mysales-PRODUCT_LIST");
 
     return product;
