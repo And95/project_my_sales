@@ -1,5 +1,5 @@
 import AppError from "@shared/errors/AppError";
-import { productsRepository } from "../database/repositories/ProductsRepositories";
+import { productsRepository } from "../infra/database/repositories/ProductsRepositories";
 import RedisCache from "@shared/cache/RedisCache";
 
 interface IDeleteProduct {

@@ -1,7 +1,7 @@
 import { hash } from "bcrypt";
 import AppError from "@shared/errors/AppError";
-import { User } from "../database/entities/User";
-import { UsersRepository } from "../database/repositories/UsersRepositories";
+import { User } from "../infra/database/entities/User";
+import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
 
 interface ICreateUser {
   name: string;

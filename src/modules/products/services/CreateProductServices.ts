@@ -1,6 +1,6 @@
 import RedisCache from "@shared/cache/RedisCache";
-import { Product } from "../database/entities/Product";
-import { productsRepository } from "../database/repositories/ProductsRepositories";
+import { Product } from "../infra/database/entities/Product";
+import { productsRepository } from "../infra/database/repositories/ProductsRepositories";
 import AppError from "@shared/errors/AppError";
 
 interface ICreateProduct {

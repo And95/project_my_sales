@@ -1,5 +1,5 @@
 import AppError from "@shared/errors/AppError";
-import { customersRepository } from "../database/repositories/CustumerRepositories";
+import { customersRepository } from "../infra/database/repositories/CustumerRepositories";
 
 interface IDeleteCustomer {
   id: number;

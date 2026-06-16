@@ -1,9 +1,9 @@
-import { User } from "../database/entities/User";
+import { User } from "../infra/database/entities/User";
 import AppError from "@shared/errors/AppError";
 import { Secret, sign } from "jsonwebtoken";
 import { compare } from "bcrypt";
 import "dotenv/config";
-import { UsersRepository } from "../database/repositories/UsersRepositories";
+import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
 
 interface ISessionUser {
   email: string;
