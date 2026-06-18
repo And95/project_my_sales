@@ -1,14 +1,10 @@
-import { Request, Response } from "express";
+import { IResetPassword } from "@modules/users/domain/models/IResetPassword";
 import ResetPasswordService from "../../../services/ResetPasswordService";
-
-interface IResetPasswordBody {
-  password: string;
-  token: string;
-}
+import { Request, Response } from "express";
 
 export default class ResetPasswordController {
   create = async (
-    request: Request<object, object, IResetPasswordBody>,
+    request: Request<object, object, IResetPassword>,
     response: Response,
   ): Promise<Response> => {
     const { password, token } = request.body;

@@ -1,20 +1,13 @@
-import { Request, Response } from "express";
-import ShowProfileService from "@modules/users/services/ShowProfileService";
 import UpdateProfileService from "@modules/users/services/UpdateProfileService";
-
-interface IUpdateProfile {
-  user_id: number;
-  name: string;
-  email: string;
-  password?: string | undefined;
-  old_password?: string | undefined;
-}
+import { IUpdateProfile } from "@modules/users/domain/models/IUpdateProfile";
+import ShowProfileService from "@modules/users/services/ShowProfileService";
+import { Request, Response } from "express";
 
 export default class ProfileController {
   show = async (request: Request, response: Response): Promise<Response> => {
     const showProfile = new ShowProfileService();
-    const user_id = Number(request.user.id);
-    const user = await showProfile.execute({ user_id });
+    const id = Number(request.user.id);
+    const user = await showProfile.execute({ id });
     return response.json(user);
   };
 

@@ -1,18 +1,14 @@
 import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
+import { IUpdateUserAvatar } from "../domain/models/IUpdateUserAvatar";
 import { User } from "../infra/database/entities/User";
 import AppError from "@shared/errors/AppError";
 import uploadConfig from "@config/uploads";
 import path from "path";
 import fs from "fs";
 
-interface IUpdateUserAvatar {
-  userId: number;
-  avatarFilename: string;
-}
-
 export default class UpdateUserAvatarService {
-  async execute({ userId, avatarFilename }: IUpdateUserAvatar): Promise<User> {
-    const user = await UsersRepository.findById(userId);
+  async execute({ user_id, avatarFilename }: IUpdateUserAvatar): Promise<User> {
+    const user = await UsersRepository.findById(user_id);
 
     if (!user) {
       throw new AppError("User not found.", 404);

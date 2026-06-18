@@ -1,13 +1,8 @@
-import { Request, Response } from "express";
-import ListUserService from "@modules/users/services/ListUserService";
 import CreateUserService from "@modules/users/services/CreateUserService";
+import { ICreateUser } from "@modules/users/domain/models/ICreateUser";
+import ListUserService from "@modules/users/services/ListUserService";
 import { instanceToInstance } from "class-transformer";
-
-interface CreateUserBody {
-  name: string;
-  email: string;
-  password: string;
-}
+import { Request, Response } from "express";
 
 export default class UsersController {
   index = async (request: Request, response: Response): Promise<Response> => {
@@ -17,7 +12,7 @@ export default class UsersController {
   };
 
   create = async (
-    request: Request<object, object, CreateUserBody>,
+    request: Request<object, object, ICreateUser>,
     response: Response,
   ): Promise<Response> => {
     const { name, email, password } = request.body;

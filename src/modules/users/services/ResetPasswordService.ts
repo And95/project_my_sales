@@ -1,13 +1,9 @@
-import AppError from "@shared/errors/AppError";
-import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
 import { userTokensRepositories } from "../infra/database/repositories/UserTokensRepositories";
+import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
+import { IResetPassword } from "../domain/models/IResetPassword";
+import AppError from "@shared/errors/AppError";
 import { isAfter, addHours } from "date-fns";
 import { hash } from "bcrypt";
-
-interface IResetPassword {
-  token: string;
-  password: string;
-}
 
 class ResetPasswordService {
   public async execute({ token, password }: IResetPassword): Promise<void> {

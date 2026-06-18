@@ -1,13 +1,8 @@
-import { hash } from "bcrypt";
-import AppError from "@shared/errors/AppError";
-import { User } from "../infra/database/entities/User";
 import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
-
-interface ICreateUser {
-  name: string;
-  email: string;
-  password: string;
-}
+import { ICreateUser } from "../domain/models/ICreateUser";
+import { User } from "../infra/database/entities/User";
+import AppError from "@shared/errors/AppError";
+import { hash } from "bcrypt";
 
 class CreateUserService {
   public async execute({ name, email, password }: ICreateUser): Promise<User> {

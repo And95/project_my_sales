@@ -1,15 +1,8 @@
 import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
+import { IUpdateProfile } from "../domain/models/IUpdateProfile";
 import { User } from "../infra/database/entities/User";
 import AppError from "@shared/errors/AppError";
 import { compare, hash } from "bcrypt";
-
-interface IUpdateProfile {
-  user_id: number;
-  name: string;
-  email: string;
-  password?: string | undefined;
-  old_password?: string | undefined;
-}
 
 class UpdateProfileService {
   public async execute({

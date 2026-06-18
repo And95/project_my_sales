@@ -1,14 +1,11 @@
-import { sendEmail } from "@config/email";
-import AppError from "@shared/errors/AppError";
-import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
 import { userTokensRepositories } from "../infra/database/repositories/UserTokensRepositories";
-
-interface IForgotPassword {
-  email: string;
-}
+import { ISendForgotPasswordEmail } from "../domain/models/ISendForgotPasswordEmail";
+import { UsersRepository } from "../infra/database/repositories/UsersRepositories";
+import AppError from "@shared/errors/AppError";
+import { sendEmail } from "@config/email";
 
 export default class SendForgotPasswordEmailService {
-  async execute({ email }: IForgotPassword): Promise<void> {
+  async execute({ email }: ISendForgotPasswordEmail): Promise<void> {
     const user = await UsersRepository.findByEmail(email);
 
     if (!user) {
