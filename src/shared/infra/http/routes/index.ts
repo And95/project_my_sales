@@ -1,4 +1,4 @@
-import customersRouter from "@modules/custumers/infra/http/routes/CustumersRoutes";
+import customersRouter from "@modules/customers/infra/http/routes/CustomersRoutes";
 import productsRouter from "@modules/products/infra/http/routes/ProductRoutes";
 import passwordRouter from "@modules/users/infra/http/routes/PasswordRoutes";
 import sessionsRouter from "@modules/users/infra/http/routes/SessionRoutes";

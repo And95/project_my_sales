@@ -1,4 +1,4 @@
-import { ICustumer } from "@modules/custumers/domain/models/ICustumer";
+import { ICustomer } from "@modules/customers/domain/models/ICustomer";
 import {
   Column,
   CreateDateColumn,
@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 
 @Entity("customers")
-export class Customer implements ICustumer {
+export class Customer implements ICustomer {
   @PrimaryGeneratedColumn()
   id!: number;
 

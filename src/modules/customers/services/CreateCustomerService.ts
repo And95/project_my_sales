@@ -1,22 +1,22 @@
 import AppError from "@shared/errors/AppError";
-import { customersRepository } from "../infra/database/repositories/CustumerRepositories";
-import { Customer } from "../infra/database/entities/Custumer";
+import { Customer } from "../infra/database/entities/Customer";
 import { ICreateUser } from "../domain/models/ICreateUser";
+import { ICustomersRepository } from "../domain/repositories/ICustomersRepositories";
 
 export default class CreateCustomerService {
+  constructor(private readonly customerRepository: ICustomersRepository) {}
+
   public async execute({ name, email }: ICreateUser): Promise<Customer> {
-    const emailExists = await customersRepository.findByEmail(email);
+    const emailExists = await this.customerRepository.findByEmail(email);
 
     if (emailExists) {
       throw new AppError("Email address already used.", 409);
     }
 
-    const customer = customersRepository.create({
+    const customer = await this.customerRepository.create({
       name,
       email,
     });
-
-    await customersRepository.save(customer);
 
     return customer;
   }

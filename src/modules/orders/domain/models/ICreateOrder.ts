@@ -1,7 +1,7 @@
-import { ICustumer } from "@modules/custumers/domain/models/ICustumer";
+import { ICustomer } from "@modules/customers/domain/models/ICustomer";
 import { ICreateOrderProducts } from "./ICreateOrderProducts";
 
 export interface ICreateOrder {
-  customer: ICustumer;
+  customer: ICustomer;
   products: ICreateOrderProducts[];
 }

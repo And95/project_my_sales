@@ -1,4 +1,4 @@
-import { ICustumer } from "./ICustumer";
+import { ICustomer } from "./ICustomer";
 
 export interface IPaginateCustomer {
   from: number;
@@ -9,5 +9,5 @@ export interface IPaginateCustomer {
   total_pages: number;
   prev_page: number | null;
   next_page: number | null;
-  data: ICustumer[];
+  data: ICustomer[];
 }
