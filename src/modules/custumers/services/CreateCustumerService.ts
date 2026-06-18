@@ -1,14 +1,10 @@
 import AppError from "@shared/errors/AppError";
 import { customersRepository } from "../infra/database/repositories/CustumerRepositories";
 import { Customer } from "../infra/database/entities/Custumer";
-
-interface ICreateCustomer {
-  name: string;
-  email: string;
-}
+import { ICreateUser } from "../domain/models/ICreateUser";
 
 export default class CreateCustomerService {
-  public async execute({ name, email }: ICreateCustomer): Promise<Customer> {
+  public async execute({ name, email }: ICreateUser): Promise<Customer> {
     const emailExists = await customersRepository.findByEmail(email);
 
     if (emailExists) {
