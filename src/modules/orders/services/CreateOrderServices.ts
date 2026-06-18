@@ -1,20 +1,12 @@
 import { customersRepository } from "@modules/custumers/infra/database/repositories/CustumerRepositories";
 import { productsRepository } from "@modules/products/infra/database/repositories/ProductsRepositories";
+import { orderRepositories } from "../infra/database/repositories/OrderRepostories";
+import { ICreateOrderDTO } from "@modules/orders/domain/models/ICreateOrderDTO";
 import { Order } from "../infra/database/entities/Order";
 import AppError from "@shared/errors/AppError";
-import { orderRepositories } from "../infra/database/repositories/OrderRepostories";
-
-interface ICreateOrder {
-  customer_id: string;
-
-  products: {
-    product_id: string;
-    quantity: number;
-  }[];
-}
 
 export class CreateOrderService {
-  async execute({ customer_id, products }: ICreateOrder): Promise<Order> {
+  async execute({ customer_id, products }: ICreateOrderDTO): Promise<Order> {
     const customerExists = await customersRepository.findById(
       Number(customer_id),
     );

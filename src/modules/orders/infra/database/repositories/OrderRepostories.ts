@@ -1,17 +1,6 @@
-import { Customer } from "@modules/custumers/infra/database/entities/Custumer";
+import { ICreateOrder } from "@modules/orders/domain/models/ICreateOrder";
 import { AppDataSource } from "@shared/infra/typeorm/data-source";
 import { Order } from "../entities/Order";
-
-interface ICreateOrder {
-  customer: Customer;
-  products: ICreateOrderProducts[];
-}
-
-export interface ICreateOrderProducts {
-  product_id: string;
-  price: number;
-  quantity: number;
-}
 
 export const orderRepositories = AppDataSource.getRepository(Order).extend({
   async findById(id: number): Promise<Order | null> {
