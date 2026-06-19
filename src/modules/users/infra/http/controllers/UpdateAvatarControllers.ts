@@ -1,21 +1,16 @@
+import UpdateUserAvatarService from "@modules/users/services/UpdateUserAvatarService";
+import { instanceToInstance } from "class-transformer";
 import { Request, Response } from "express";
-import UpdateUserAvatarService from "../../../services/UpdateUserAvatarService";
+import { container } from "tsyringe";
 
-export default class UpdateAvatarControllers {
-  update = async (req: Request, res: Response): Promise<Response> => {
-    const updateUserAvatar = new UpdateUserAvatarService();
-
-    const avatarFilename = req.file?.filename;
-
-    if (!avatarFilename) {
-      throw new Error("Avatar file not provided.");
-    }
-
+export default class UserAvatarController {
+  public async update(request: Request, response: Response): Promise<Response> {
+    const updateUserAvatar = container.resolve(UpdateUserAvatarService);
     const user = await updateUserAvatar.execute({
-      userId: Number(req.user.id),
-      avatarFilename,
+      userId: request.user.id,
+      avatarFileName: request.file?.filename as string,
     });
 
-    return res.json(user);
-  };
+    return response.json(instanceToInstance(user));
+  }
 }

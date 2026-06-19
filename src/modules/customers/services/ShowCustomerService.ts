@@ -2,9 +2,14 @@ import { ICustomersRepository } from "../domain/repositories/ICustomersRepositor
 import { Customer } from "../infra/database/entities/Customer";
 import { IShowCustomer } from "../domain/models/IShowCustomer";
 import AppError from "@shared/errors/AppError";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export default class ShowCustomerService {
-  constructor(private readonly customersRepository: ICustomersRepository) {}
+  constructor(
+    @inject("CustomersRepository")
+    private readonly customersRepository: ICustomersRepository,
+  ) {}
   public async execute({ id }: IShowCustomer): Promise<Customer> {
     const customer = await this.customersRepository.findById(Number(id));
 

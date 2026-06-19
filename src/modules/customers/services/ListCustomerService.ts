@@ -1,8 +1,13 @@
-import { IPaginateCustomer } from "../domain/models/IPaginationCustomer";
 import { ICustomersRepository } from "../domain/repositories/ICustomersRepositories";
+import { IPaginateCustomer } from "../domain/models/IPaginationCustomer";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export default class ListCustomerService {
-  constructor(private readonly customersRepository: ICustomersRepository) {}
+  constructor(
+    @inject("CustomersRepository")
+    private readonly customersRepository: ICustomersRepository,
+  ) {}
   async execute(
     page: number = 1,
     limit: number = 10,

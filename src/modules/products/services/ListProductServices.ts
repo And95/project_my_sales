@@ -1,20 +1,30 @@
+import { SearchParams } from "@modules/users/infra/database/repositories/UsersRepositories";
+import { IProductsRepository } from "../domain/repositories/IProductsRepository";
+import { IProductPaginate } from "../domain/models/IProductPaginate";
 import RedisCache from "@shared/cache/RedisCache";
-import { Product } from "../infra/database/entities/Product";
-import { productsRepository } from "../infra/database/repositories/ProductsRepositories";
+import { inject, injectable } from "tsyringe";
 
+@injectable()
 export default class ListProductService {
-  async execute(): Promise<Product[]> {
+  constructor(
+    @inject("ProductsRepository")
+    private productsRepository: IProductsRepository,
+  ) {}
+  public async execute({
+    page,
+    skip,
+    take,
+  }: SearchParams): Promise<IProductPaginate> {
     const redisCache = new RedisCache();
-
-    let products = await redisCache.recover<Product[]>(
-      "api-mysales-PRODUCT_LIST",
+    let products = await redisCache.recover<IProductPaginate>(
+      "api-vendas-PRODUCT_LIST",
     );
 
     if (!products) {
-      products = await productsRepository.find();
+      products = await this.productsRepository.findAll({ page, skip, take });
 
       await redisCache.save(
-        "api-mysales-PRODUCT_LIST",
+        "api-vendas-PRODUCT_LIST",
         JSON.stringify(products),
       );
     }

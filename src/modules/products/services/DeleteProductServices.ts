@@ -1,18 +1,28 @@
-import { productsRepository } from "../infra/database/repositories/ProductsRepositories";
-import { IDeleteProduct } from "../domain/models/IDeleteProduct";
+import { IProductsRepository } from "../domain/repositories/IProductsRepository";
+import { Product } from "../infra/database/entities/Product";
 import RedisCache from "@shared/cache/RedisCache";
 import AppError from "@shared/errors/AppError";
+import { inject, injectable } from "tsyringe";
 
+interface IRequest {
+  id: string;
+}
+
+@injectable()
 export default class DeleteProductService {
-  public async execute({ id }: IDeleteProduct): Promise<void> {
-    const redisCache = new RedisCache();
-    const product = await productsRepository.findById(id);
+  constructor(
+    @inject("ProductsRepository")
+    private productsRepository: IProductsRepository,
+  ) {}
+  public async execute({ id }: IRequest): Promise<void> {
+    const product = await this.productsRepository.findById(id);
 
     if (!product) {
-      throw new AppError("Product not found.", 404);
+      throw new AppError("Product not found.");
     }
 
-    await redisCache.invalidate("api-mysales-PRODUCT_LIST");
-    await productsRepository.remove(product);
+    const redisCache = new RedisCache();
+    await redisCache.invalidate("api-vendas-PRODUCT_LIST");
+    await this.productsRepository.remove(product as unknown as Product);
   }
 }

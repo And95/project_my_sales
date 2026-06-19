@@ -1,13 +1,13 @@
-import "reflect-metadata";
-import "express-async-errors";
-import express from "express";
-import cors from "cors";
-import { errors } from "celebrate";
-
-import routes from "./routes";
 import ErrorHandleMiddleware from "@shared/middlewares/ErrorHandleMiddleware";
 import { AppDataSource } from "@shared/infra/typeorm/data-source";
 import rateLimiter from "@shared/middlewares/rateLimiter";
+import { errors } from "celebrate";
+import "express-async-errors";
+import express from "express";
+import routes from "./routes";
+import "@shared/container";
+import "reflect-metadata";
+import cors from "cors";
 
 AppDataSource.initialize()
   .then(() => {

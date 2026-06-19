@@ -1,12 +1,10 @@
+import UpdateCustomerService from "@modules/customers/services/UpdateCustomerService";
+import CreateCustomerService from "@modules/customers/services/CreateCustomerService";
+import DeleteCustomerService from "@modules/customers/services/DeleteCustomerService";
+import ShowCustomerService from "@modules/customers/services/ShowCustomerService";
+import ListCustomerService from "@modules/customers/services/ListCustomerService";
 import { Request, Response } from "express";
-
-import CreateCustomerService from "../../../services/CreateCustomerService";
-import DeleteCustomerService from "../../../services/DeleteCustomerService";
-import ShowCustomerService from "../../../services/ShowCustomerService";
-import UpdateCustomerService from "../../../services/UpdateCustomerService";
-import ListCustomerService from "../../../services/ListCustomerService";
-
-import CustomersRepository from "../../../infra/database/repositories/CustomerRepositories";
+import { container } from "tsyringe";
 
 interface CreateCustomerBody {
   name: string;
@@ -20,15 +18,10 @@ interface UpdateCustomerBody {
 
 export default class CustomersController {
   index = async (request: Request, response: Response): Promise<Response> => {
-    const page = Number(request.query.page) || 1;
-    const limit = Number(request.query.limit) || 10;
-
-    const customersRepository = new CustomersRepository();
-
-    const listCustomers = new ListCustomerService(customersRepository);
-
+    const page = parseInt(request.query.page as string) || 1;
+    const limit = parseInt(request.query.limit as string) || 10;
+    const listCustomers = container.resolve(ListCustomerService);
     const customers = await listCustomers.execute(page, limit);
-
     return response.json(customers);
   };
 
@@ -36,16 +29,9 @@ export default class CustomersController {
     request: Request<{ id: string }>,
     response: Response,
   ): Promise<Response> => {
-    const id = Number(request.params.id);
-
-    const customersRepository = new CustomersRepository();
-
-    const showCustomer = new ShowCustomerService(customersRepository);
-
-    const customer = await showCustomer.execute({
-      id,
-    });
-
+    const { id } = request.params;
+    const showCustomer = container.resolve(ShowCustomerService);
+    const customer = await showCustomer.execute({ id: Number(id) });
     return response.json(customer);
   };
 
@@ -54,11 +40,7 @@ export default class CustomersController {
     response: Response,
   ): Promise<Response> => {
     const { name, email } = request.body;
-
-    const customersRepository = new CustomersRepository();
-
-    const createCustomer = new CreateCustomerService(customersRepository);
-
+    const createCustomer = container.resolve(CreateCustomerService);
     const customer = await createCustomer.execute({
       name,
       email,
@@ -72,15 +54,10 @@ export default class CustomersController {
     response: Response,
   ): Promise<Response> => {
     const { name, email } = request.body;
-
-    const id = Number(request.params.id);
-
-    const customersRepository = new CustomersRepository();
-
-    const updateCustomer = new UpdateCustomerService(customersRepository);
-
+    const { id } = request.params;
+    const updateCustomer = container.resolve(UpdateCustomerService);
     const customer = await updateCustomer.execute({
-      id,
+      id: Number(id),
       name,
       email,
     });
@@ -92,16 +69,9 @@ export default class CustomersController {
     request: Request<{ id: string }>,
     response: Response,
   ): Promise<Response> => {
-    const id = Number(request.params.id);
-
-    const customersRepository = new CustomersRepository();
-
-    const deleteCustomer = new DeleteCustomerService(customersRepository);
-
-    await deleteCustomer.execute({
-      id,
-    });
-
-    return response.status(204).send();
+    const { id } = request.params;
+    const deleteCustomer = container.resolve(DeleteCustomerService);
+    await deleteCustomer.execute({ id: Number(id) });
+    return response.json([]);
   };
 }
