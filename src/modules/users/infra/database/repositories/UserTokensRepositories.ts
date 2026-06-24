@@ -15,17 +15,14 @@ export class UserTokensRepository implements IUserTokensRepository {
     const userToken = await this.ormRepository.findOneBy({
       token,
     });
-
-    return userToken as unknown as IUserToken;
+    return userToken as IUserToken | null;
   }
 
   public async generate(user_id: string): Promise<IUserToken> {
-    const id = Number(user_id);
     const userToken = this.ormRepository.create({
-      id,
+      user_id: Number(user_id),
     });
-
-    await this.ormRepository.save(userToken);
-    return userToken as unknown as IUserToken;
+    const savedUserToken = await this.ormRepository.save(userToken);
+    return savedUserToken as unknown as IUserToken;
   }
 }

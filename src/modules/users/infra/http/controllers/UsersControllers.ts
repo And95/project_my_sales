@@ -10,23 +10,28 @@ interface ICreateUserBody {
   password: string;
 }
 
-export default class UsersController {
-  public async index(request: Request, response: Response): Promise<Response> {
-    const { page, skip, take } = request.query;
+export default class UsersControllers {
+  public index = async (
+    request: Request,
+    response: Response,
+  ): Promise<Response> => {
+    const page = Number(request.query.page) || 1;
+    const skip = Number(request.query.skip) || 0;
+    const take = Number(request.query.take) || 2;
     const listUser = container.resolve(ListUserService);
     const users = await listUser.execute({
-      page: Number(page),
-      skip: Number(skip),
-      take: Number(take),
+      page,
+      skip,
+      take,
     });
 
     return response.json(instanceToInstance(users));
-  }
+  };
 
-  public async create(
+  public create = async (
     request: Request<object, object, ICreateUserBody>,
     response: Response,
-  ): Promise<Response> {
+  ): Promise<Response> => {
     const { name, email, password } = request.body;
     const createUser = container.resolve(CreateUserService);
     const user = await createUser.execute({
@@ -36,5 +41,5 @@ export default class UsersController {
     });
 
     return response.json(instanceToInstance(user));
-  }
+  };
 }

@@ -1,9 +1,9 @@
-import { ICustomersRepository } from "@modules/customers/domain/repositories/ICustomersRepositories";
-import { IProductsRepository } from "@modules/products/domain/repositories/IProductsRepository";
-import { IOrdersRepository } from "../domain/repositories/IOrdersRepository";
-import { IOrder } from "../domain/models/IOrder";
 import AppError from "@shared/errors/AppError";
 import { inject, injectable } from "tsyringe";
+import { IOrdersRepository } from "../domain/repositories/IOrdersRepository";
+import { ICustomersRepository } from "@modules/customers/domain/repositories/ICustomersRepositories";
+import { IProductsRepository } from "@modules/products/domain/repositories/IProductsRepository";
+import { IOrder } from "../domain/models/IOrder";
 
 interface IProduct {
   id: string;
@@ -14,9 +14,8 @@ interface IRequest {
   customer_id: string;
   products: IProduct[];
 }
-
 @injectable()
-export default class CreateOrderService {
+class CreateOrderService {
   constructor(
     @inject("OrdersRepository")
     private ordersRepository: IOrdersRepository,
@@ -50,27 +49,46 @@ export default class CreateOrderService {
     );
 
     if (checkInexistentProducts.length) {
-      const productId = checkInexistentProducts[0]?.id ?? "unknown";
-      throw new AppError(`Could not find product ${productId}.`, 404);
+      const [inexistentProduct] = checkInexistentProducts;
+
+      throw new AppError(
+        `Could not find product ${inexistentProduct?.id}.`,
+        404,
+      );
     }
 
-    const quantityAvailable = products.filter((product) => {
-      const existingProduct = existsProducts.find((p) => p.id === product.id);
+    const insufficientQuantityProducts = products.filter((product) => {
+      const productFound = existsProducts.find((p) => p.id === product.id);
 
-      return (existingProduct?.quantity ?? 0) < product.quantity;
+      return !!productFound && productFound.quantity < product.quantity;
     });
 
-    if (!quantityAvailable.length) {
-      throw new AppError(`The quantity is not available for.`, 409);
+    if (insufficientQuantityProducts.length) {
+      const productsMessage = insufficientQuantityProducts
+        .map((product) => {
+          const productFound = existsProducts.find((p) => p.id === product.id);
+
+          return `${productFound?.name} (requested: ${product.quantity}, available: ${productFound?.quantity ?? 0})`;
+        })
+        .join(", ");
+
+      throw new AppError(
+        `Insufficient quantity for product(s): ${productsMessage}.`,
+        409,
+      );
     }
 
     const serializedProducts = products.map((product) => {
-      const existingProduct = existsProducts.find((p) => p.id === product.id);
+      const productFound = existsProducts.find((p) => p.id === product.id);
+
+      if (!productFound) {
+        throw new AppError(`Could not find product ${product.id}.`, 404);
+      }
 
       return {
         product_id: product.id,
         quantity: product.quantity,
-        price: existingProduct?.price ?? 0,
+        price: productFound.price,
       };
     });
 
@@ -82,13 +100,20 @@ export default class CreateOrderService {
     const { order_products } = order;
 
     const updatedProductQuantity = order_products.map((product) => {
-      const existingProduct = existsProducts.find(
+      const productExists = existsProducts.find(
         (p) => p.id === product.product_id,
       );
 
+      if (!productExists) {
+        throw new AppError(
+          `Could not find product ${product.product_id}.`,
+          404,
+        );
+      }
+
       return {
         id: product.product_id,
-        quantity: (existingProduct?.quantity ?? 0) - product.quantity,
+        quantity: productExists.quantity - product.quantity,
       };
     });
 
@@ -97,3 +122,5 @@ export default class CreateOrderService {
     return order;
   }
 }
+
+export default CreateOrderService;

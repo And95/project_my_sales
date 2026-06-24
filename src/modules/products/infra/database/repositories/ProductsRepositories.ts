@@ -1,12 +1,12 @@
-import { In, Repository } from "typeorm";
-import { IFindProducts } from "@modules/products/domain/models/IFindProducts";
-import { ICreateProduct } from "@modules/products/domain/models/ICreateProduct";
+import { IProductsRepository } from "@modules/products/domain/repositories/IProductsRepository";
 import { IUpdateStockProduct } from "@modules/products/domain/models/IUpdateStockProduct";
 import { IProductPaginate } from "@modules/products/domain/models/IProductPaginate";
+import { ICreateProduct } from "@modules/products/domain/models/ICreateProduct";
+import { IFindProducts } from "@modules/products/domain/models/IFindProducts";
+import { IProduct } from "@modules/products/domain/models/IProduct";
 import { AppDataSource } from "@shared/infra/typeorm/data-source";
 import { Product } from "../entities/Product";
-import { IProductsRepository } from "@modules/products/domain/repositories/IProductsRepository";
-import { IProduct } from "@modules/products/domain/models/IProduct";
+import { In, Repository } from "typeorm";
 
 type SearchParams = {
   page: number;
@@ -26,22 +26,33 @@ export class ProductsRepository implements IProductsRepository {
     price,
     quantity,
   }: ICreateProduct): Promise<IProduct> {
-    const product = this.ormRepository.create({ name, price, quantity });
+    const product = this.ormRepository.create({
+      name,
+      price,
+      quantity,
+    });
+
     await this.ormRepository.save(product);
+
     return product as unknown as IProduct;
   }
 
   public async save(product: Product): Promise<IProduct> {
     await this.ormRepository.save(product);
+
     return product as unknown as IProduct;
+  }
+
+  public async updateStock(products: IUpdateStockProduct[]): Promise<void> {
+    for (const product of products) {
+      await this.ormRepository.update(product.id, {
+        quantity: product.quantity,
+      });
+    }
   }
 
   public async remove(product: Product): Promise<void> {
     await this.ormRepository.remove(product);
-  }
-
-  public async updateStock(products: IUpdateStockProduct[]): Promise<void> {
-    await this.ormRepository.save(products);
   }
 
   public async findByName(name: string): Promise<IProduct | null> {
@@ -49,12 +60,15 @@ export class ProductsRepository implements IProductsRepository {
       name,
     });
 
-    return product as unknown as IProduct | null;
+    return product as IProduct | null;
   }
 
   public async findById(id: string): Promise<IProduct | null> {
-    const product = await this.ormRepository.findOneBy({ id });
-    return product as unknown as IProduct;
+    const product = await this.ormRepository.findOneBy({
+      id,
+    });
+
+    return product as IProduct | null;
   }
 
   public async findAll({
@@ -68,18 +82,17 @@ export class ProductsRepository implements IProductsRepository {
       .take(take)
       .getManyAndCount();
 
-    const result = {
+    return {
       per_page: take,
       total: count,
       current_page: page,
-      data: products,
+      data: products as unknown as IProduct[],
     };
-
-    return result as unknown as IProductPaginate;
   }
 
   public async findAllByIds(products: IFindProducts[]): Promise<IProduct[]> {
     const productIds = products.map((product) => product.id);
+
     const existentProducts = await this.ormRepository.find({
       where: {
         id: In(productIds),

@@ -9,12 +9,18 @@ export default class ListUserService {
     @inject("UsersRepository")
     private usersRepository: IUsersRepository,
   ) {}
+
   public async execute({
     page,
     skip,
     take,
   }: SearchParams): Promise<IPaginateUser> {
-    const users = this.usersRepository.findAll({ page, skip, take });
+    const users = await this.usersRepository.findAll({
+      page,
+      skip,
+      take,
+    });
+
     return users;
   }
 }

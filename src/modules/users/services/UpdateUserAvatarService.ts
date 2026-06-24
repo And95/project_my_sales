@@ -19,15 +19,19 @@ export default class UpdateUserAvatarService {
   ) {}
   public async execute({ userId, avatarFileName }: IRequest): Promise<User> {
     const user = await this.usersRepository.findById(userId);
+
     if (!user) {
       throw new AppError("User not found.", 404);
     }
 
     if (user.avatar) {
       const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar);
-      const userAvatarFileExists = await fs.promises.stat(userAvatarFilePath);
-      if (userAvatarFileExists) {
+
+      try {
+        await fs.promises.stat(userAvatarFilePath);
         await fs.promises.unlink(userAvatarFilePath);
+      } catch {
+        // arquivo não existe, ignora
       }
     }
 

@@ -22,11 +22,11 @@ export class UsersRepository implements IUsersRepository {
   public async create({ name, email, password }: ICreateUser): Promise<IUser> {
     const user = this.ormRepository.create({ name, email, password });
     await this.ormRepository.save(user);
-    return user as unknown as IUser;
+    return user as IUser;
   }
 
   public async save(user: IUser): Promise<void> {
-    await this.ormRepository.save(user as unknown as User);
+    await this.ormRepository.save(user as User);
   }
 
   public async findAll({
@@ -47,7 +47,7 @@ export class UsersRepository implements IUsersRepository {
       data: users,
     };
 
-    return result as unknown as IPaginateUser;
+    return result as IPaginateUser;
   }
 
   public async findByName(name: string): Promise<IUser | null> {
@@ -55,7 +55,7 @@ export class UsersRepository implements IUsersRepository {
       name,
     });
 
-    return user as unknown as IUser;
+    return user as IUser;
   }
 
   public async findById(id: string): Promise<IUser | null> {
@@ -63,7 +63,7 @@ export class UsersRepository implements IUsersRepository {
       id: Number(id),
     });
 
-    return user as unknown as IUser;
+    return user as IUser;
   }
 
   public async findByEmail(email: string): Promise<IUser | null> {
@@ -71,6 +71,6 @@ export class UsersRepository implements IUsersRepository {
       email,
     });
 
-    return user as unknown as IUser;
+    return user as IUser;
   }
 }

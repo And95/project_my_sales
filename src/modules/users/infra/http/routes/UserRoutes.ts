@@ -1,7 +1,7 @@
-import { Router } from "express";
+import AuthMiddleware from "@shared/middlewares/AuthMiddleware";
 import UsersControllers from "../controllers/UsersControllers";
 import { createUserSchema } from "../schemas/UserSchemas";
-import AuthMiddleware from "@shared/middlewares/AuthMiddleware";
+import { Router } from "express";
 
 const usersRouter = Router();
 const usersController = new UsersControllers();
