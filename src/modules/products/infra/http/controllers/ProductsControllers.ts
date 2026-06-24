@@ -6,17 +6,7 @@ import ListProductService from "@modules/products/services/ListProductServices";
 import { Request, Response } from "express";
 import { container } from "tsyringe";
 
-interface IProductParams {
-  id: string;
-}
-
-interface ICreateProductBody {
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface IUpdateProductBody {
+interface IProductBody {
   name: string;
   price: number;
   quantity: number;
@@ -29,11 +19,9 @@ interface IListProductQuery {
 }
 
 export default class ProductsController {
-  public async index(
-    request: Request<object, object, object, IListProductQuery>,
-    response: Response,
-  ): Promise<Response> {
-    const { page = "1", skip = "0", take = "10" } = request.query;
+  public async index(request: Request, response: Response) {
+    const query = request.query as IListProductQuery;
+    const { page = "1", skip = "0", take = "10" } = query;
     const listProductsService = container.resolve(ListProductService);
     const products = await listProductsService.execute({
       page: Number(page),
@@ -44,24 +32,15 @@ export default class ProductsController {
     return response.json(products);
   }
 
-  public async show(
-    request: Request<IProductParams>,
-    response: Response,
-  ): Promise<Response> {
-    const { id } = request.params;
+  public async show(request: Request, response: Response) {
+    const { id } = request.params as { id: string };
     const showProductService = container.resolve(ShowProductService);
-    const product = await showProductService.execute({
-      id,
-    });
-
+    const product = await showProductService.execute({ id });
     return response.json(product);
   }
 
-  public async create(
-    request: Request<object, object, ICreateProductBody>,
-    response: Response,
-  ): Promise<Response> {
-    const { name, price, quantity } = request.body;
+  public async create(request: Request, response: Response) {
+    const { name, price, quantity } = request.body as IProductBody;
     const createProductService = container.resolve(CreateProductService);
     const product = await createProductService.execute({
       name,
@@ -72,12 +51,9 @@ export default class ProductsController {
     return response.status(201).json(product);
   }
 
-  public async update(
-    request: Request<IProductParams, object, IUpdateProductBody>,
-    response: Response,
-  ): Promise<Response> {
-    const { id } = request.params;
-    const { name, price, quantity } = request.body;
+  public async update(request: Request, response: Response) {
+    const { id } = request.params as { id: string };
+    const { name, price, quantity } = request.body as IProductBody;
     const updateProductService = container.resolve(UpdateProductService);
     const product = await updateProductService.execute({
       id,
@@ -89,16 +65,10 @@ export default class ProductsController {
     return response.json(product);
   }
 
-  public async delete(
-    request: Request<IProductParams>,
-    response: Response,
-  ): Promise<Response> {
-    const { id } = request.params;
+  public async delete(request: Request, response: Response) {
+    const { id } = request.params as { id: string };
     const deleteProductService = container.resolve(DeleteProductService);
-    await deleteProductService.execute({
-      id,
-    });
-
+    await deleteProductService.execute({ id });
     return response.status(204).send();
   }
 }

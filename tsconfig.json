@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "./",
     "baseUrl": "./",
     "paths": {
       "@config/*": ["src/config/*"],
@@ -9,36 +9,25 @@
     },
     "outDir": "build",
     "ignoreDeprecations": "6.0",
-
     "module": "commonjs",
     "target": "ES2020",
-
     "types": ["node"],
     "lib": ["ES2020"],
-
     "sourceMap": true,
-
     "declaration": true,
     "declarationMap": true,
-
     "strict": true,
-
     "esModuleInterop": true,
     "resolveJsonModule": true,
-
     "skipLibCheck": true,
-
     "noImplicitAny": true,
-
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
-
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": true,
     "typeRoots": ["node_modules/@types", "src/@types"]
   },
-
   "include": ["src"],
   "exclude": ["node_modules", "build"]
 }
