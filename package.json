@@ -26,7 +26,7 @@
     "express": "^4.22.2",
     "express-async-errors": "^3.1.1",
     "ioredis": "^5.11.1",
-    "jest": "^30.4.2",
+    "jest": "^26.6.3",
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "nodemailer": "^9.0.1",
@@ -35,7 +35,8 @@
     "redis": "^5.12.1",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.4.0",
-    "typeorm": "^0.3.27"
+    "typeorm": "^0.3.27",
+    "uuid": "^14.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -50,11 +51,12 @@
     "@types/node": "^25.9.1",
     "@types/nodemailer": "^8.0.0",
     "@types/redis": "^4.0.10",
+    "@types/uuid": "^11.0.0",
     "@typescript-eslint/eslint-plugin": "^8.59.4",
     "@typescript-eslint/parser": "^8.59.4",
     "cross-env": "^10.1.0",
     "eslint": "^10.4.0",
-    "ts-jest": "^29.4.11",
+    "ts-jest": "^26.5.6",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
