@@ -2,19 +2,37 @@ import "reflect-metadata";
 import "dotenv/config";
 import { DataSource } from "typeorm";
 
-const { DB_HOST, DB_PORT, DB_USER, DB_PASS, DB_NAME } = process.env;
+const port = process.env.PORT ? Number(process.env.PORT) : 5432;
 
-if (!DB_HOST || !DB_PORT || !DB_USER || !DB_PASS || !DB_NAME) {
-  throw new Error("Missing environment variables");
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing env var: ${name}`);
+  }
+  return value;
 }
 
-export const AppDataSource = new DataSource({
-  type: "postgres",
-  host: DB_HOST,
-  port: Number(DB_PORT),
-  username: DB_USER,
-  password: DB_PASS,
-  database: DB_NAME,
-  entities: ["./src/modules/**/infra/database/entities/*.{ts,js}"],
-  migrations: ["./src/shared/infra/typeorm/migrations/*.{ts,js}"],
-});
+const baseDataSourceOptions = {
+  type: "postgres" as const,
+  host: requireEnv("DB_HOST"),
+  port: port,
+  username: requireEnv("DB_USER"),
+  password: requireEnv("DB_PASS"),
+  database: requireEnv("DB_NAME"),
+  entities: [`./src/modules/**/infra/database/entities/*.{ts,js}`],
+  migrations: [`./src/shared/infra/typeorm/migrations/*.{ts,js}`],
+};
+
+const appTestDataSourceOptions = {
+  ...baseDataSourceOptions,
+  database:
+    process.env.NODE_ENV === "test"
+      ? requireEnv("DB_NAME_TEST")
+      : requireEnv("DB_NAME"),
+};
+
+export const AppDataSource = new DataSource(
+  process.env.NODE_ENV === "test"
+    ? appTestDataSourceOptions
+    : baseDataSourceOptions,
+);
