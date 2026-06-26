@@ -1,7 +1,7 @@
-import AppError from "@shared/errors/AppError";
-import { customerMock } from "../domain/factories/customerFactory";
 import FakeCustomersRepository from "../domain/repositories/fakes/FakeCustomerRepositories";
+import { customerMock } from "../domain/factories/customerFactory";
 import CreateCustomerService from "./CreateCustomerService";
+import AppError from "@shared/errors/AppError";
 
 let fakeCustomersRepository: FakeCustomersRepository;
 let createCustomer: CreateCustomerService;
@@ -20,7 +20,6 @@ describe("CreateCustomerService", () => {
 
   it("should not be able to create a new customer with email that is already in use", async () => {
     await createCustomer.execute(customerMock);
-
     await expect(createCustomer.execute(customerMock)).rejects.toBeInstanceOf(
       AppError,
     );
