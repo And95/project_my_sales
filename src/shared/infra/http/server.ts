@@ -9,24 +9,25 @@ import "@shared/container";
 import "reflect-metadata";
 import cors from "cors";
 
-AppDataSource.initialize()
-  .then(() => {
-    const app = express();
+const startServer = async () => {
+  await AppDataSource.initialize();
+  const app = express();
+  app.use(cors());
+  app.use(express.json());
+  app.use(rateLimiter);
+  app.use(routes);
+  app.use(errors());
+  app.use(ErrorHandleMiddleware.handleError);
+  console.log("Connected to the database! 🎉");
+  return app;
+};
 
-    app.use(cors());
-    app.use(express.json());
-
-    app.use(rateLimiter);
-    app.use(routes);
-    app.use(errors());
-    app.use(ErrorHandleMiddleware.handleError);
-
-    console.log("Connected to the database successfully! 🎉");
-
-    app.listen(3333, () => {
+export default startServer()
+  .then((app) => {
+    return app.listen(3333, () => {
       console.log("Server started on port 3333! 🏆");
     });
   })
   .catch((error) => {
-    console.error("Failed to connect to the database:", error);
+    console.error("Failed to connect to the serve:", error);
   });
