@@ -22,7 +22,10 @@ export class OrdersRepository implements IOrdersRepository {
   public async findById(id: string): Promise<IOrder | null> {
     const order = await this.ormRepository.findOne({
       where: { id: Number(id) },
-      relations: ["order_products", "customer"],
+      relations: {
+        order_products: true,
+        customer: true,
+      },
     });
 
     return order as unknown as IOrder | null;
